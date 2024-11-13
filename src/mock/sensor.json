@@ -1,0 +1,29 @@
+{
+  "suhumax": "temperature",
+  "suhumin": "temperature",
+  "average": "rata-rata",
+  "nilai_suhu_max_humid_max": [
+    {
+      "id": 141,
+      "suhu": 26,
+      "humid": 65,
+      "Lux": 27,
+      "Timestamp": "2024-11-11 08:23:47"
+    },
+    {
+      "id": 141,
+      "suhu": 26,
+      "humid": 65,
+      "Lux": 27,
+      "Timestamp": "2024-11-11 08:23:47"
+    }
+  ],
+  "month_year_max": [
+    {
+      "month_year": "11-2024"
+    },
+    {
+      "month_year": "11-2023"
+    }
+  ]
+}
