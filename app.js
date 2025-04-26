@@ -28,4 +28,14 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Server up and running on port ${port}`));
+// Get local IP address dynamically
+const os = require("os");
+const networkInterfaces = os.networkInterfaces();
+const localIP = Object.values(networkInterfaces)
+  .flat()
+  .find((iface) => iface.family === "IPv4" && !iface.internal)?.address;
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server up and running on http://${localIP}:${port}`);
+  console.log(`Server also accessible on http://localhost:${port}`);
+});

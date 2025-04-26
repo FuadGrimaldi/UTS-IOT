@@ -65,6 +65,75 @@ exports.find = async (req, res) => {
   }
 };
 
+// Tambahkan handler GET untuk menyimpan data sensor
+exports.create = async (req, res) => {
+  try {
+    const { produk, temperature, humidity, gas, fan_status, lamp_status } =
+      req.query; // Mengambil data dari query string
+
+    const temp = parseFloat(temperature);
+    const hum = parseFloat(humidity);
+    const gasValue = parseFloat(gas);
+
+    console.log(temp, humidity, gasValue);
+
+    // Validasi data jika diperlukan
+    if (isNaN(temp) || isNaN(hum) || isNaN(gasValue)) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Invalid input data",
+        data: null,
+        error: "Bad Request",
+      });
+    }
+
+    // Validasi status fan dan lampu, hanya bisa ON atau OFF
+    if (
+      !["ON", "OFF"].includes(fan_status) ||
+      !["ON", "OFF"].includes(lamp_status)
+    ) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Invalid fan or lamp status",
+        data: null,
+        error: "Bad Request",
+      });
+    }
+
+    // Simpan data ke database
+    const result = await SensorData.create({
+      id_produk: produk, // Gunakan produk dari query atau default "IC001"
+      suhu: temp,
+      humid: hum,
+      gas: gasValue,
+      fan: fan_status.toUpperCase(), // Pastikan nilai fan dalam huruf kapital
+      lampu: lamp_status.toUpperCase(), // Pastikan nilai lampu dalam huruf kapital
+    });
+    console.log(result);
+
+    return res.status(201).json({
+      status: 201,
+      success: true,
+      message: "Sensor data created successfully",
+      data: {
+        result,
+      },
+      error: null,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      success: false,
+      message: "Internal server error",
+      data: null,
+      error: "Internal Server Error",
+    });
+  }
+};
+
 exports.getSensorStats = async (req, res) => {
   try {
     // SELECT max(`suhu`) AS `max_suhu` FROM `tb_cuaca` AS `tb_cuaca` LIMIT 1
@@ -128,7 +197,7 @@ exports.getSensorStats = async (req, res) => {
           id: item.id,
           suhu: item.suhu,
           humid: item.humid,
-          Lux: item.lux,
+          gas: item.gas,
           Timestamp: item.ts,
         })),
         month_year_max: monthYearMax.map((item) => ({
