@@ -2,6 +2,7 @@ const express = require("express");
 const database = require("./src/db/database");
 const sensorRoute = require("./src/routes/sensorRoute");
 const productRoute = require("./src/routes/productRoute");
+const uploadRoute = require("./src/routes/uploadRoute");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/dataSensor", sensorRoute);
 app.use("/api/product", productRoute);
+app.use("/api/upload", uploadRoute);
 
 database
   .sync({ alter: true })

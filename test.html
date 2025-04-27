@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produk</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .product {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 20px;
+      }
+
+      .product-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 250px;
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .product-card:hover {
+        transform: scale(1.05);
+      }
+
+      .product-card img {
+        width: 100%;
+        border-radius: 8px;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-card h3 {
+        font-size: 1.2rem;
+        color: #333;
+      }
+
+      .product-card p {
+        color: #555;
+        font-size: 0.9rem;
+      }
+
+      .price {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #e67e22;
+      }
+
+      .button {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+      }
+
+      .button:hover {
+        background-color: #2980b9;
+      }
+
+      .details {
+        font-size: 0.85rem;
+        color: #777;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Daftar Produk</h1>
+      <div class="product" id="product-list">
+        <!-- Produk akan dimuat di sini -->
+      </div>
+    </div>
+
+    <script>
+      // Fungsi untuk mengambil produk dari API
+      fetch("http://localhost:3000/api/product/")
+        .then((response) => response.json())
+        .then((data) => {
+          // Cek apakah data merupakan array
+          if (Array.isArray(data)) {
+            const productList = document.getElementById("product-list");
+
+            data.forEach((product) => {
+              const productCard = document.createElement("div");
+              productCard.classList.add("product-card");
+
+              productCard.innerHTML = `
+              <img src="${product.img_url}" alt="${product.nama}">
+              <h3>${product.nama}</h3>
+              <p>ID: ${product.id}</p>
+              <p>Tinggi: ${product.tinggi} cm</p>
+              <p>Lebar: ${product.lebar} cm</p>
+              <p>Kapasitas: ${product.kapasitas} telur</p>
+              <p>Telur: ${product.telur}</p>
+              <p>Pass Access: ${product.pass_access}</p>
+              <p class="price">Rp ${product.price.toLocaleString()}</p>
+            `;
+
+              productList.appendChild(productCard);
+            });
+          } else {
+            console.error("Data yang diterima bukan array:", data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+        });
+    </script>
+  </body>
+</html>
